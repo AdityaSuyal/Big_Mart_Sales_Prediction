@@ -1,0 +1,16 @@
+Once I received the train and test datasets the first thing I got to notice is that there are 2 columns which have null values in them viz. Item_Weight and Outlet_Size. I performed few EDA steps of trying to see the correlation of the variables with each other, their distribution an outlier detection. Out of all the steps which I did the important and impactful ones are still there in the notebook. If the distribution was skewed then using np.log1p or removing few outliers were some of the steps which I took. 
+
+There were few feature imputation/manipulation also to be done as follow:
+1- The Item_Visibility had few records with value as 0 which is not possible. So I replaced all the 0s to the mean/median.
+2- The null values of Outlet_Size column were filled using the mode value of Outlet_Size grouped by its Outlet_Type.
+3- The null values of Item_Weight column were replaced by mean/median.
+4- When focusing on the Item_Identifier I could identify that the initial 2 string values of each of its record gives us information about the item and hence I created a new column using the first 2 values of the string. The 3 values are DR, NC and FD
+5- NC meant non-conumable and hence having a coresponding Item_Fat_Content as low-fat or regular doesn't fit well. Hence I gave those rows an encoding value different from low-fat and regular so as to create a different category.
+6- I tried to see whether the Outlet_Establishment_Year column has some kind of connection to Item_Outlet_Sales either via correlation value or graph and the most suited way to use that column was to subtract the column value with minimum value of Outlet_Establishment_Year and make a new column called num_years.
+7- At last, few of the categorical columns were ordinalencoded. Since I used only tree-based models hence using ordinal encoding instead of one hot encoding was not an issue.
+
+Finally, I used 'Item_Weight', 'Item_Fat_Content', 'Item_Visibility', 'Item_Type', 'Item_MRP', 'Outlet_Size', 'Outlet_Location_Type', 'Outlet_Type', 'Item_Identifier_transformed', 'num_years' as my input variables and I tried XGBoost, LightGBM and Random Forest for prediction. I also used GridSearchCV with neg_mean_squared_error scoring mechanism and evaluation by K-fold cross-validation for hyperparameter tuning etc.
+
+I got the best test RMSE results using XGBoost with a RMSE value of 1151.9616191218 and a rank of 1237
+
+There are many other things which I tried but the test results did not get better with them eg: using np.log1p, using one hot encoding different ranges of hyperparameters and k-fold cross validation, model ensembling etc.
